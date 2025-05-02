@@ -5,14 +5,22 @@
     output: document.getElementById('output')
   };
 
+  function updateStatus(newText) {
+    dom.status.classList.add('hidden');
+    dom.status.addEventListener('transitionend', () => {
+      dom.status.textContent = newText;
+      dom.status.classList.remove('hidden');
+    }, { once: true });
+  }
+
   // Helper: read settings
   async function getSettings() {
     return new Promise(resolve => {
       chrome.storage.sync.get({
-        prompt: 'Give me a concise, bullet‑point summary of the page.',
+        prompt: "Define the key facts and main developments (in other words, the most important information) of this text. Don't miss anything which looks important to mention. Write this in a form of bullet points. At the end, please write the essence of the article - what did author tried to say us?",
         apiKey: '',
         apiPath: 'https://api.openai.com',
-        model: 'gpt-4o'
+        model: 'gpt-4.1'
       }, resolve);
     });
   }
@@ -84,10 +92,10 @@
     const settings = await getSettings();
     if (!settings.apiKey) throw new Error('OpenAI key not set – open the extension options to configure it.');
 
-    dom.status.textContent = 'Fetching page text …';
+    updateStatus('Fetching page text …');
     const pageText = await captureTabText();
 
-    dom.status.textContent = 'Talking to model …';
+    updateStatus('Talking to model …');
     const fullPrompt = `${settings.prompt}\n\nPAGE CONTENT:\n"""\n${pageText}\n"""`;
 
     let firstChunk = true;
@@ -98,11 +106,17 @@
       prompt: fullPrompt
     })) {
       if (firstChunk) {
-        dom.status.remove();
+        dom.status.classList.add('hidden');
+        dom.status.addEventListener('transitionend', () => dom.status.remove(), { once: true });
         firstChunk = false;
       }
     }
   } catch (err) {
     dom.status.textContent = `Error: ${err.message}`;
   }
+
+  document.getElementById('close-btn').addEventListener('click', () => {
+    window.close();
+  });
+
 })();

@@ -8,15 +8,46 @@ body {
     border-radius: 12px;
     overflow: hidden;
   }
-  
+
+  /* Add at top of style.css */
+  .popup-body {
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
   .popup-header {
     background: #4a5568; /* Changed from bunny-red to a neutral gray */
     color: #fff;
-    padding: 8px 12px;
+    position: relative;
+    padding: 12px 40px 12px 12px; /* extra right space for the X */
     font-weight: 600;
     text-align: center;
   }
+
+  .status {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+  }
+  .status.hidden {
+    opacity: 0;
+  }
   
+  .close-btn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    line-height: 1;
+    color: #fff;
+    cursor: pointer;
+    padding: 0;
+  }
+  .close-btn:hover {
+    opacity: 0.8;
+  }
+
   .status {
     padding: 12px;
     font-style: italic;
