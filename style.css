@@ -1,0 +1,74 @@
+body {
+    font-family: system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+    color: #222;
+    width: 320px;
+  }
+  
+  .popup-header {
+    background: #b11324; /* bunny‑red for flair */
+    color: #fff;
+    padding: 8px 12px;
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  .status {
+    padding: 12px;
+    font-style: italic;
+  }
+  
+  .output {
+    white-space: pre-wrap;
+    padding: 12px;
+    height: 360px;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  /* Options page */
+  .options-body {
+    padding: 16px;
+    max-width: 640px;
+  }
+  
+  .options-body h1 {
+    margin-top: 0;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 12px;
+  }
+  
+  textarea,
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    background: #b11324;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .saved {
+    opacity: 0;
+    margin-left: 8px;
+    transition: opacity 0.3s ease-in;
+  }
+  
+  .saved.visible {
+    opacity: 1;
+  }

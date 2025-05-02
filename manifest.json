@@ -1,0 +1,22 @@
+{
+    "manifest_version": 3,
+    "name": "Page Summary Assistant",
+    "description": "One-click page summariser with streaming output and fully customisable prompt / endpoint / model.",
+    "version": "1.0.0",
+  
+    "action": {
+      "default_title": "Summarise this page",
+      "default_popup": "popup.html"
+    },
+  
+    "options_page": "options.html",
+  
+    "permissions": [
+      "activeTab",
+      "scripting",
+      "storage"
+    ],
+    "host_permissions": [
+      "*://*/*"
+    ]
+  }

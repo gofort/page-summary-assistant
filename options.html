@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Page Summary Assistant – Options</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="options-body">
+    <h1>Configuration</h1>
+    <form id="form">
+      <label>Prompt<br /><textarea id="prompt" rows="4"></textarea></label>
+      <label>OpenAI‑compatible API Key<br /><input type="password" id="apiKey" /></label>
+      <label>API Base URL<br /><input type="text" id="apiPath" placeholder="https://api.openai.com" /></label>
+      <label>Model<br /><input type="text" id="model" placeholder="gpt-4o" /></label>
+      <button type="submit">Save</button>
+      <span id="saved" class="saved">✓ Saved</span>
+    </form>
+    <script src="options.js"></script>
+  </body>
+</html>
