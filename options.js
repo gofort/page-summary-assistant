@@ -5,10 +5,10 @@ const saved = document.getElementById('saved');
 
 function load() {
   chrome.storage.sync.get({
-    prompt: 'Give me a concise, bullet‑point summary of the page.',
+    prompt: "Define the key facts and main developments (in other words, the most important information) of this text. Don't miss anything which looks important to mention. Write this in a form of bullet points. At the end, please write the essence of the article - what did author tried to say us?",
     apiKey: '',
     apiPath: 'https://api.openai.com',
-    model: 'gpt-4o'
+    model: 'gpt-4.1'
   }, data => {
     ids.forEach(id => (els[id].value = data[id] || ''));
   });

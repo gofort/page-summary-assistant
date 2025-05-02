@@ -51,6 +51,7 @@
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let buffer = '';
+    let markdownContent = '';
 
     while (true) {
       const { value, done } = await reader.read();
@@ -66,7 +67,11 @@
         try {
           const json = JSON.parse(content);
           const delta = json.choices?.[0]?.delta?.content;
-          if (delta) yield delta;
+          if (delta) {
+            markdownContent += delta;
+            dom.output.innerHTML = marked.parse(markdownContent);
+            dom.output.scrollTop = dom.output.scrollHeight;
+          }
         } catch (_) {
           /* discard malformed JSON chunks */
         }
@@ -79,10 +84,10 @@
     const settings = await getSettings();
     if (!settings.apiKey) throw new Error('OpenAI key not set – open the extension options to configure it.');
 
-    dom.status.textContent = 'Fetching page text …';
+    dom.status.textContent = 'Fetching page text …';
     const pageText = await captureTabText();
 
-    dom.status.textContent = 'Talking to model …';
+    dom.status.textContent = 'Talking to model …';
     const fullPrompt = `${settings.prompt}\n\nPAGE CONTENT:\n"""\n${pageText}\n"""`;
 
     let firstChunk = true;
@@ -96,8 +101,6 @@
         dom.status.remove();
         firstChunk = false;
       }
-      dom.output.textContent += chunk;
-      dom.output.scrollTop = dom.output.scrollHeight;
     }
   } catch (err) {
     dom.status.textContent = `Error: ${err.message}`;
