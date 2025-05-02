@@ -5,10 +5,12 @@ body {
     background: #ffffff;
     color: #222;
     width: 320px;
+    border-radius: 12px;
+    overflow: hidden;
   }
   
   .popup-header {
-    background: #b11324; /* bunny‑red for flair */
+    background: #4a5568; /* Changed from bunny-red to a neutral gray */
     color: #fff;
     padding: 8px 12px;
     font-weight: 600;
@@ -51,14 +53,14 @@ body {
     box-sizing: border-box;
     padding: 6px 8px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 8px; /* Increased border radius for more rounded corners */
   }
   
   button {
     padding: 6px 12px;
     border: none;
-    border-radius: 4px;
-    background: #b11324;
+    border-radius: 8px; /* Increased border radius for consistency */
+    background: #4a5568; /* Changed to match the new header color */
     color: #fff;
     cursor: pointer;
   }
