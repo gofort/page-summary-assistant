@@ -1,23 +1,12 @@
 /* global chrome */
 (async () => {
-  const dom = {
-    status: document.getElementById('status'),
-    output: document.getElementById('output')
-  };
-
-  function updateStatus(newText) {
-    dom.status.classList.add('hidden');
-    dom.status.addEventListener('transitionend', () => {
-      dom.status.textContent = newText;
-      dom.status.classList.remove('hidden');
-    }, { once: true });
-  }
+  const outputEl = document.getElementById('output');
 
   // Helper: read settings
   async function getSettings() {
     return new Promise(resolve => {
       chrome.storage.sync.get({
-        prompt: "Define the key facts and main developments (in other words, the most important information) of this text. Don't miss anything which looks important to mention. Write this in a form of bullet points. At the end, please write the essence of the article - what did author tried to say us?",
+        prompt: "Define the key facts and main developments ...",
         apiKey: '',
         apiPath: 'https://api.openai.com',
         model: 'gpt-4.1'
@@ -36,13 +25,8 @@
   }
 
   // Stream OpenAI‑compatible chat completion
-  async function * streamCompletion({ apiKey, apiPath, model, prompt }) {
-    const payload = {
-      model,
-      stream: true,
-      messages: [{ role: 'user', content: prompt }]
-    };
-
+  async function* streamCompletion({ apiKey, apiPath, model, prompt }) {
+    const payload = { model, stream: true, messages: [{ role: 'user', content: prompt }] };
     const response = await fetch(`${apiPath.replace(/\/$/, '')}/v1/chat/completions`, {
       method: 'POST',
       headers: {
@@ -51,11 +35,7 @@
       },
       body: JSON.stringify(payload)
     });
-
-    if (!response.ok) {
-      throw new Error(`API error ${response.status}`);
-    }
-
+    if (!response.ok) throw new Error(`API error ${response.status}`);
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let buffer = '';
@@ -66,7 +46,7 @@
       if (done) break;
       buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split('\n');
-      buffer = lines.pop(); // last line may be incomplete
+      buffer = lines.pop();
       for (const line of lines) {
         const trimmed = line.trim();
         if (!trimmed.startsWith('data:')) continue;
@@ -77,19 +57,15 @@
           const delta = json.choices?.[0]?.delta?.content;
           if (delta) {
             markdownContent += delta;
-            // render new content
-            dom.output.innerHTML = marked.parse(markdownContent);
-
-            // only auto-scroll if user hasn’t manually scrolled up
-            const { scrollTop, scrollHeight, clientHeight } = dom.output;
-            const isNearlyAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
-
-            if (isNearlyAtBottom) {
-              dom.output.scrollTop = scrollHeight;
+            outputEl.innerHTML = marked.parse(markdownContent);
+            // auto-scroll
+            const { scrollTop, scrollHeight, clientHeight } = outputEl;
+            if (scrollTop + clientHeight >= scrollHeight - 10) {
+              outputEl.scrollTop = scrollHeight;
             }
           }
         } catch (_) {
-          /* discard malformed JSON chunks */
+          // ignore
         }
       }
     }
@@ -100,36 +76,20 @@
     const settings = await getSettings();
     if (!settings.apiKey) throw new Error('OpenAI key not set – open the extension options to configure it.');
 
-    updateStatus('Fetching page text …');
     const pageText = await captureTabText();
-
-    updateStatus('Talking to model …');
     const fullPrompt = `${settings.prompt}\n\nPAGE CONTENT:\n"""\n${pageText}\n"""`;
 
-    let firstChunk = true;
-    for await (const chunk of streamCompletion({
+    for await (const _ of streamCompletion({
       apiKey: settings.apiKey,
       apiPath: settings.apiPath,
       model: settings.model,
       prompt: fullPrompt
     })) {
-      if (firstChunk) {
-        dom.status.classList.add('hidden');
-        dom.status.addEventListener('transitionend', () => dom.status.remove(), { once: true });
-        // firstChunk = false;
-      }
+      // streaming
     }
   } catch (err) {
-    dom.status.textContent = `Error: ${err.message}`;
+    outputEl.innerHTML = `<p>Error: ${err.message}</p>`;
   }
 
-  dom.status.classList.add('hidden');
-  dom.status.addEventListener('transitionend', () => {
-    dom.status.remove();
-  }, { once: true });
-
-  document.getElementById('close-btn').addEventListener('click', () => {
-    window.close();
-  });
-
+  document.getElementById('close-btn').addEventListener('click', () => window.close());
 })();

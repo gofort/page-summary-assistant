@@ -7,12 +7,10 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body class="popup-body">
-    <header class="popup-header">
-      Page Summary Assistant
-      <button id="close-btn" class="close-btn" aria-label="Close">&times;</button>
-    </header>
-  
-    <section id="status" class="status">Preparing …</section>
+    <!-- Floating close button -->
+    <button id="close-btn" class="close-btn" aria-label="Close">&times;</button>
+
+    <!-- Summary output area -->
     <div id="output" class="output markdown-body"></div>
 
     <script src="lib/marked.min.js"></script>
