@@ -77,8 +77,16 @@
           const delta = json.choices?.[0]?.delta?.content;
           if (delta) {
             markdownContent += delta;
+            // render new content
             dom.output.innerHTML = marked.parse(markdownContent);
-            dom.output.scrollTop = dom.output.scrollHeight;
+
+            // only auto-scroll if user hasn’t manually scrolled up
+            const { scrollTop, scrollHeight, clientHeight } = dom.output;
+            const isNearlyAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+
+            if (isNearlyAtBottom) {
+              dom.output.scrollTop = scrollHeight;
+            }
           }
         } catch (_) {
           /* discard malformed JSON chunks */
