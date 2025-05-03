@@ -116,12 +116,17 @@
       if (firstChunk) {
         dom.status.classList.add('hidden');
         dom.status.addEventListener('transitionend', () => dom.status.remove(), { once: true });
-        firstChunk = false;
+        // firstChunk = false;
       }
     }
   } catch (err) {
     dom.status.textContent = `Error: ${err.message}`;
   }
+
+  dom.status.classList.add('hidden');
+  dom.status.addEventListener('transitionend', () => {
+    dom.status.remove();
+  }, { once: true });
 
   document.getElementById('close-btn').addEventListener('click', () => {
     window.close();
