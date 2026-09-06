@@ -3,19 +3,101 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Page Summary Assistant – Options</title>
+    <title>Page Summary Assistant — Options</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body class="options-body">
-    <h1>Configuration</h1>
+    <h1 class="page-title">Page Summary Assistant</h1>
+    <p class="page-subtitle">Set the endpoint, the model, and the prompt.</p>
+
     <form id="form">
-      <label>Prompt<br /><textarea id="prompt" rows="4"></textarea></label>
-      <label>OpenAI‑compatible API Key<br /><input type="password" id="apiKey" /></label>
-      <label>API Base URL<br /><input type="text" id="apiPath" placeholder="https://api.openai.com" /></label>
-      <label>Model<br /><input type="text" id="model" placeholder="gpt-4.1" /></label>
-      <button type="submit">Save</button>
-      <span id="saved" class="saved">✓ Saved</span>
+      <section class="card">
+        <h2 class="card-title">Connection</h2>
+        <p class="card-hint">Any OpenAI-compatible endpoint works.</p>
+
+        <div class="field">
+          <label for="apiKey">API key</label>
+          <input type="password" id="apiKey" autocomplete="off" placeholder="sk-…" />
+        </div>
+
+        <div class="field">
+          <label for="apiPath">Base URL</label>
+          <input type="text" id="apiPath" placeholder="https://api.openai.com" />
+          <p class="field-hint">The extension adds <code>/v1/chat/completions</code> to it.</p>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title">Model</h2>
+        <p class="card-hint">Load the list from the endpoint, or type a name.</p>
+
+        <div class="field">
+          <label for="model">Model</label>
+          <div class="field-row">
+            <input type="text" id="model" list="model-list" placeholder="gpt-5.1" />
+            <button type="button" id="refresh" class="btn btn-secondary">Load models</button>
+          </div>
+          <datalist id="model-list"></datalist>
+          <p class="field-hint" id="model-status"></p>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="reasoningEffort">Reasoning effort <span class="badge" id="cap-reasoning"></span></label>
+            <select id="reasoningEffort">
+              <option value="">Model default</option>
+              <option value="none">none</option>
+              <option value="minimal">minimal</option>
+              <option value="low">low</option>
+              <option value="medium">medium</option>
+              <option value="high">high</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="verbosity">Verbosity <span class="badge" id="cap-verbosity"></span></label>
+            <select id="verbosity">
+              <option value="">Model default</option>
+              <option value="low">low</option>
+              <option value="medium">medium</option>
+              <option value="high">high</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="temperature">Temperature <span class="badge" id="cap-temperature"></span></label>
+            <input type="number" id="temperature" min="0" max="2" step="0.1" placeholder="Model default" />
+          </div>
+
+          <div class="field">
+            <label for="maxTokens">Max output tokens</label>
+            <input type="number" id="maxTokens" min="1" step="1" placeholder="Model default" />
+          </div>
+        </div>
+
+        <p class="field-hint">
+          An empty field sends no parameter. If the model rejects a parameter,
+          the extension removes it and sends the request again.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title">Prompt</h2>
+        <p class="card-hint">The page text goes after this instruction.</p>
+        <div class="field">
+          <label for="prompt" class="sr-only">Prompt</label>
+          <textarea id="prompt"></textarea>
+        </div>
+      </section>
+
+      <div class="actions">
+        <button type="submit" class="btn">Save</button>
+        <button type="button" id="reset" class="btn btn-secondary">Reset prompt</button>
+        <span id="saved" class="saved">Saved</span>
+      </div>
     </form>
+
+    <script src="models.js"></script>
     <script src="options.js"></script>
   </body>
 </html>

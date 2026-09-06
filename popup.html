@@ -7,14 +7,17 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body class="popup-body">
-    <!-- Floating close button -->
-    <button id="close-btn" class="close-btn" aria-label="Close">&times;</button>
+    <header class="topbar">
+      <span class="brand">Summary</span>
+      <button id="close-btn" class="icon-btn" aria-label="Close">&times;</button>
+    </header>
 
-    <!-- Summary output area -->
-    <div id="output" class="output markdown-body"></div>
+    <main id="output" class="output markdown-body" aria-live="polite">
+      <div class="loader" aria-label="Loading"><span></span><span></span><span></span></div>
+    </main>
 
     <script src="lib/marked.min.js"></script>
-    <script src="lib/github-markdown.css"></script>
+    <script src="models.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>
